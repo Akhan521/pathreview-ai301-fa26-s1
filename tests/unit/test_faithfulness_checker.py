@@ -233,6 +233,18 @@ class TestFaithfulnessChecker:
         assert isinstance(score, float)
         assert 0.0 <= score <= 1.0
 
+    def test_none_text_chunk_does_not_drop_other_chunks(self, checker):
+        """Test a None-text chunk is treated as empty, not as dropping the context."""
+        feedback = "Has Python skills"
+        context_chunks = [
+            {"text": None},
+            {"text": "Python skills shown in projects"},
+        ]
+
+        score = checker.check(feedback, context_chunks)
+
+        assert score == 1.0
+
     def test_missing_text_key_in_chunk(self, checker):
         """Test handling of missing 'text' key in context chunk."""
         feedback = "Has Python skills"
